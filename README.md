@@ -1,3 +1,7 @@
+编译选项： 
+
+`cmake -DCMAKE_DEBUG_POSTFIX=-gd -DVTK_SMP_IMPLEMENTATION_TYPE=TBB -DTBB_DIR="D:\Program Files (x86)\Intel\oneAPI\tbb\2022.0\bin" -DCMAKE_INSTALL_PREFIX="..\build\Install" -DVTK_Group_Qt:BOOL=ON -DCMAKE_PREFIX_PATH:PATH=D:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5 -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=YES -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=YES -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES ..\`
+
 ![VTK - The Visualization Toolkit][vtk-banner]
 
 Introduction
