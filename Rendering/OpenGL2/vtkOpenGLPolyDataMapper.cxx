@@ -1153,9 +1153,11 @@ void vtkOpenGLPolyDataMapper::ReplaceShaderLight(
           false);
         toString << "  mat4 invViewMatrix = inverse(MCVCMatrix);\n"         // Compute inverse matrix to transform from view to world space
                     "  vec3 viewDir = normalize(invViewMatrix[2].xyz);\n"   // Camera view direction in world space
-                    "  vec3 normalWS = normalize(mat3(invViewMatrix) * normalVCVSOutput);\n"    // Transform normal from view to world space
-                    "  bool isOnFront = dot(normalWS, viewDir) > 0;\n"      // True if point faces the viewer (front side)
-                    "  float minValue = isOnFront ? 0.5 : 0.000001;\n"      // Set diffuse minimum: 0.5 for front, 0.000001 for back
+                    "  mat3 normalMatrix = transpose(inverse(mat3(invViewMatrix)));\n"    // Compute the normal matrix (transpose of inverse)
+                    "  vec3 normalWS = normalize(normalMatrix * normalVCVSOutput);\n"     // Transform normal from view to world space using the normal matrix
+                    "  float dotProduct = dot(normalWS, viewDir);\n"
+                    "  bool isOnFront = dotProduct > 1e-5;\n"               // True if point faces the viewer (front side), add a threshold for numerical stability
+                    "  float minValue = isOnFront ? 0.5 : 1e-6;\n"          // Set diffuse minimum: 0.5 for front, 0.000001 for back
                     "  float df = max(normalVCVSOutput.z, minValue);\n"     // Compute diffuse factor
                     "  float sf = pow(df, specularPower);\n"
                     "  vec3 diffuse = df * diffuseColor * lightColor0;\n"
