@@ -1156,7 +1156,7 @@ void vtkOpenGLPolyDataMapper::ReplaceShaderLight(
         double* backfaceColor = (backfaceProp != nullptr) ? backfaceProp->GetColor() : actor->GetProperty()->GetDiffuseColor();
 
         toString << "  bool frontFacing = normalVCVSOutput.z >= 0;\n"
-                    "  float df = frontFacing ? max(normalVCVSOutput.z, 1e-6) : 0;\n"
+                    "  float df = max(normalVCVSOutput.z, 1e-6);\n"
                     "  float sf = pow(df, specularPower);\n"
                     "  vec3 diffuse = df * diffuseColor * lightColor0;\n"
                     "  vec3 specular = sf * specularColor * lightColor0;\n"
