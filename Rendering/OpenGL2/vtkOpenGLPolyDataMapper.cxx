@@ -1153,7 +1153,7 @@ void vtkOpenGLPolyDataMapper::ReplaceShaderLight(
           false);
 
         vtkProperty* backfaceProp = actor->GetBackfaceProperty();
-        double* backfaceColor = (backfaceProp != nullptr) ? backfaceProp->GetColor() : actor->GetProperty()->GetDiffuseColor();
+        double* backfaceColor = (backfaceProp != nullptr) ? backfaceProp->GetColor() : actor->GetProperty()->GetAmbientColor();
 
         toString << "  bool frontFacing = normalVCVSOutput.z >= 0;\n"
                     "  float df = max(normalVCVSOutput.z, 1e-6);\n"
