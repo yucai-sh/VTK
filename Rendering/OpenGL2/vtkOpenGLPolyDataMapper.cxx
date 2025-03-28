@@ -1149,8 +1149,7 @@ void vtkOpenGLPolyDataMapper::ReplaceShaderLight(
       {
         vtkProperty* backfaceProp = actor->GetBackfaceProperty();
         double* backfaceColor = (backfaceProp != nullptr) ? backfaceProp->GetColor() : actor->GetProperty()->GetAmbientColor();
-
-        double ambientCoefficeient = actor->GetProperty()->GetAmbient();
+        double ambientCoefficeient = (backfaceProp != nullptr) ? backfaceProp->GetAmbient() : actor->GetProperty()->GetAmbient();
         backfaceColor[0] *= ambientCoefficeient;
         backfaceColor[1] *= ambientCoefficeient;
         backfaceColor[2] *= ambientCoefficeient;
