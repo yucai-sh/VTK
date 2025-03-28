@@ -1147,16 +1147,19 @@ void vtkOpenGLPolyDataMapper::ReplaceShaderLight(
       }
       else
       {
-        vtkShaderProgram::Substitute(FSSource, "//VTK::Camera::Dec",
-          "uniform mat4 MCVCMatrix;\n"
-          "//VTK::Camera::Dec\n",
-          false);
-        toString << "  bool isOnFront = normalVCVSOutput.z >= 0;\n"
-                    "  float minValue = isOnFront ? 0.5 : 1e-6;\n"          // Set diffuse minimum: 0.5 for front, 0.000001 for back
-                    "  float df = max(normalVCVSOutput.z, minValue);\n"     // Compute diffuse factor
+        vtkProperty* backfaceProp = actor->GetBackfaceProperty();
+        double* backfaceColor = (backfaceProp != nullptr) ? backfaceProp->GetColor() : actor->GetProperty()->GetAmbientColor();
+        double ambientCoefficeient = (backfaceProp != nullptr) ? backfaceProp->GetAmbient() : actor->GetProperty()->GetAmbient();
+        backfaceColor[0] *= ambientCoefficeient;
+        backfaceColor[1] *= ambientCoefficeient;
+        backfaceColor[2] *= ambientCoefficeient;
+
+        toString << "  bool frontFacing = normalVCVSOutput.z >= 0;\n"
+                    "  float df = max(normalVCVSOutput.z, 1e-6);\n"
                     "  float sf = pow(df, specularPower);\n"
                     "  vec3 diffuse = df * diffuseColor * lightColor0;\n"
                     "  vec3 specular = sf * specularColor * lightColor0;\n"
+                    "  ambientColor = frontFacing ? ambientColor : vec3(" << backfaceColor[0] << ", " << backfaceColor[1] << ", " << backfaceColor[2] << ");\n"
                     "  gl_FragData[0] = vec4(ambientColor + diffuse + specular, opacity);\n"
                     "  //VTK::Light::Impl\n";
       }
